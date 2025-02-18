@@ -55,7 +55,8 @@ class UserController extends Controller
     public function findUser($id)
     {
         $user = User::find($id);
-        if (is_null($user)) {
+        //check if user not found at all or requesting other users data
+        if (is_null($user) || auth('api')->user()->id != $user->id) {
             return response()->json([
                 'user' => null,
                 'message' => 'User not found.'
@@ -66,5 +67,13 @@ class UserController extends Controller
                 'message' => 'User found.'
             ]);
         }
+    }
+    public function logout()
+    {
+        auth()->user()->tokens->each(function ($token) {
+            $token->delete();
+        });
+
+        return response()->json(['message' => 'Logged out successfully']);
     }
 }
