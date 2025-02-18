@@ -52,4 +52,19 @@ class UserController extends Controller
             'message' => 'Invalid credss.'
         ]);
     }
+    public function findUser($id)
+    {
+        $user = User::find($id);
+        if (is_null($user)) {
+            return response()->json([
+                'user' => null,
+                'message' => 'User not found.'
+            ]);
+        } else {
+            return response()->json([
+                'user' => $user,
+                'message' => 'User found.'
+            ]);
+        }
+    }
 }
